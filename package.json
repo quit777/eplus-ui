@@ -1,0 +1,38 @@
+{
+  "name": "eplus-ui",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "lib/eplus-ui.umd.min.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lib": "vite build --target lib --name eplus-ui --dest lib src/components/index.js"
+  },
+  "dependencies": {
+    "element-plus": "^2.5.3",
+    "vue": "^3.3.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^5.0.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wocwin/t-ui.git"
+  },
+  "homepage": "",
+  "keywords": [
+    "element-ui",
+    "element-plus",
+    "vue",
+    "table",
+    "el-table",
+    "el-form",
+    "form",
+    "二次封装组件",
+    "封装组件",
+    "components"
+  ]
+}
