@@ -1,11 +1,14 @@
 import EButton from "./EButton";
+import ECurd from "./ECurd";
 
 const components = [
     EButton,
+    ECurd
 ];
 
 export {
     EButton,
+    ECurd
 };
 
 

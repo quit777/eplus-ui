@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# set 代理 git config --global http.proxy http://127.0.0.1:7890
+# del 代理 git config --global --unset http.proxy

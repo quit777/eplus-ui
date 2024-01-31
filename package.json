@@ -3,14 +3,25 @@
   "private": false,
   "version": "0.0.1",
   "type": "module",
-  "main": "lib/eplus-ui.umd.min.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/eplus-ui.umd.js",
+  "module": "./dist/eplus-ui.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/eplus-ui.es.js",
+      "require": "./dist/eplus-ui.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lib": "vite build --target lib --name eplus-ui --dest lib src/components/index.js"
+    "lib": "vite build --target lib --name eplusui --dest lib src/components/index.js"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "element-plus": "^2.5.3",
     "vue": "^3.3.11"
   },
@@ -20,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wocwin/t-ui.git"
+    "url": "https://github.com/quit777/eplus-ui"
   },
   "homepage": "",
   "keywords": [
