@@ -1,24 +1,32 @@
 <template>
-  <el-button v-bind="$attrs" :type="type">
-    <template #default>
+  <el-button v-bind="$attrs" :type="type" :loading="loading">
+    <template #default v-if="slots.default">
       <slot></slot>
     </template>
-    <template #icon>
-      <!-- <Search /> -->
-    </template>
-
-    <template #loading>
-      <!-- <Search /> -->
+    <template #icon v-if="icon">
+      <Search v-if="icon == 'Search'" />
+      <Refresh v-if="icon == 'Refresh'" />
+      <ArrowUp v-if="icon == 'ArrowUp'" />
+      <ArrowDown v-if="icon == 'ArrowDown'" />
+      <ArrowUpBold v-if="icon == 'ArrowUpBold'" />
+      <ArrowDownBold v-if="icon == 'ArrowDownBold'" />
     </template>
   </el-button>
 </template>
 
 <script setup name="EButton">
-import { defineProps, ref, useAttrs } from "vue";
-import { Search, Refresh, ArrowDownBold } from "@element-plus/icons-vue";
+import { defineProps, useAttrs, useSlots } from "vue";
+import {
+  Search,
+  Refresh,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpBold,
+  ArrowDownBold,
+} from "@element-plus/icons-vue";
 
 const aaa = useAttrs();
-console.log(aaa, "attrs");
+const slots = useSlots();
 
 const props = defineProps({
   icon: {
@@ -27,6 +35,10 @@ const props = defineProps({
   type: {
     type: String,
     default: "primary",
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>

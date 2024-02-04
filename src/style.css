@@ -3,3 +3,41 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+.h-full {
+  height: 100%;
+}
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.gap-12 {
+  gap: 12px;
+}
+.gap-24 {
+  gap: 24px;
+}
+.flex-auto {
+  flex: 1 1 auto;
+}
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.mb-12 {
+  margin-bottom: 12 !important;
+}
+.pl-12 {
+  padding-left: 12px !important;
+}
