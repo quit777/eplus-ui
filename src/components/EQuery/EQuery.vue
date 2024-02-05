@@ -46,7 +46,7 @@ import { defineProps, ref, defineExpose, defineEmits, useAttrs, nextTick, onMoun
 import EFormItem from "../EFormItem";
 import EButton from "../EButton";
 const aa = useAttrs();
-console.log(aa, "aa");
+// console.log(aa, "aa");
 
 const emits = defineEmits(["expand", "search", "setting", "reset", "getHeight"]);
 const collapsed = ref(false);

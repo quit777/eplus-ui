@@ -33,7 +33,7 @@ import EQuery from "../EQuery";
 import ETable from "../ETable";
 
 const aaa = useAttrs();
-console.log(aaa, "attrs");
+// console.log(aaa, "attrs");
 // 查询区高度
 const queryHeight = ref(0);
 

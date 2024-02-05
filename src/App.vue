@@ -9,8 +9,10 @@
               :data-source="dataSource"
               :label-width="labelWidth"
               :model="query"
-              :loading="loding"
+              :loading="loading"
               :isPagination="true"
+              :pagination="pagination"
+              @pagination-change="onPaginationChange"
               @search="onSearch"
             >
               <template #default>
@@ -29,20 +31,16 @@ import { ref } from "vue";
 import EButton from "./components/EButton";
 import ECurd from "./components/ECurd";
 import EConfigProvider from "./components/EConfigProvider";
+import { useTable } from "./useTable.js";
 const labelWidth = "7.5em";
-const dataSource = ref([]);
-
 const query = ref({
   projectName: "测试",
 });
-const loding = ref(false);
-const onSearch = () => {
-  loding.value = true;
-  setTimeout(() => {
-    loding.value = false;
-    console.log(query.value, "最终数据");
-  }, 2000);
-};
+
+const { dataSource, loading, onSearch, pagination, onPaginationChange } = useTable({
+  queryParams: query,
+});
+
 const columns = ref([
   {
     label: "项目名称",
@@ -56,23 +54,23 @@ const columns = ref([
   { label: "项目大类", name: "projectBigTypeName", search: true },
   { label: "项目子类", name: "projectChildTypeName", search: true },
   { label: "项目状态", name: "projectStatusName", search: true },
-  {
-    label: "项目信息",
-    align: "center",
-    children: [
-      { label: "单位名称", name: "orgName", width: 100 },
-      { label: "项目编码", name: "projectCode", width: 100 },
-      { label: "项目名称", name: "projectName", width: 100 },
-      { label: "工程登记号", name: "registrationNo", width: 100 },
-      { label: "项目大类", name: "projectBigTypeName", width: 100 },
-      { label: "项目子类", name: "projectChildTypeName", width: 100 },
-      { label: "客户", name: "customerStr", width: 100 },
-      { label: "立项时间", name: "buildTime", width: 100 },
-      { label: "工程形象进度(%)", name: "totalProgress", width: 150 },
-      { label: "项目状态", name: "projectStatusStr", width: 100 },
-      { label: "完工时间", name: "completedAcceptTime", width: 100 },
-    ],
-  },
+  // {
+  //   label: "项目信息",
+  //   align: "center",
+  //   children: [
+  //     { label: "单位名称", name: "orgName", width: 100 },
+  //     { label: "项目编码", name: "projectCode", width: 100 },
+  //     { label: "项目名称", name: "projectName", width: 100 },
+  //     { label: "工程登记号", name: "registrationNo", width: 100 },
+  //     { label: "项目大类", name: "projectBigTypeName", width: 100 },
+  //     { label: "项目子类", name: "projectChildTypeName", width: 100 },
+  //     { label: "客户", name: "customerStr", width: 100 },
+  //     { label: "立项时间", name: "buildTime", width: 100 },
+  //     { label: "工程形象进度(%)", name: "totalProgress", width: 150 },
+  //     { label: "项目状态", name: "projectStatusStr", width: 100 },
+  //     { label: "完工时间", name: "completedAcceptTime", width: 100 },
+  //   ],
+  // },
   // {
   //   label: "总包结算情况",
   //   align: "center",

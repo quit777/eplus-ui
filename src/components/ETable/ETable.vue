@@ -1,6 +1,6 @@
 <template>
   <div class="h-full flex flex-col gap-12">
-    <div v-if="$slots.default" class="flex flex-row gap-12" ref="funBox">
+    <div v-if="isShowFunc" class="flex flex-row gap-12" ref="funBox">
       <div class="flex-auto">
         <!-- 占位内容 -->
         <slot></slot>
@@ -21,7 +21,6 @@
         v-bind="$attrs"
         :data="dataSource"
         :border="true"
-        :pagination="pagination"
         v-loading="loading"
         element-loading-background="rgba(255, 255, 255, 0.5)"
         scrollbar-always-on
@@ -59,8 +58,18 @@
         </template>
       </el-table>
     </div>
-    <div ref="pagination" class="flex justify-end" v-if="isPagination">
-      <el-pagination small background layout="prev, pager, next" :total="50" />
+    <div ref="paginationBox" class="flex justify-end" v-if="isPagination">
+      <el-pagination
+        small
+        background
+        :currentPage="pagination.current"
+        :pageSize="pagination.pageSize"
+        :page-sizes="pageSizes"
+        :layout="paginationLayout"
+        :total="pagination.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -68,6 +77,7 @@
 <script setup name="ETable">
 import {
   defineProps,
+  defineEmits,
   ref,
   useAttrs,
   onMounted,
@@ -75,11 +85,19 @@ import {
   onBeforeUnmount,
   nextTick,
   watch,
+  useSlots,
 } from "vue";
-const aaa = useAttrs();
-const pagination = ref(null);
+const attrs = useAttrs();
+const slots = useSlots();
+// 有无功能区的插槽
+const slotsDefault = slots.default();
+// console.log(attrs, "attrs");
+console.log(slots, "slots");
+const paginationBox = ref(null);
 const funBox = ref(null);
 const tableHeight = ref(0);
+
+const emits = defineEmits(["pagination-change"]);
 
 const props = defineProps({
   columns: {
@@ -106,22 +124,39 @@ const props = defineProps({
     type: Number,
     default: 42,
   },
+  paginationLayout: {
+    type: String,
+    default: "total,sizes, prev, pager, next",
+  },
+  pageSizes: {
+    type: Array,
+    default: () => [10, 20, 30, 40, 50, 100],
+  },
 });
 let theColumns = ref([]);
 
-watch(
-  () => props.queryHeight,
-  (newVal) => {
-    getTableHeight();
-  }
+const isShowFunc = ref(
+  !(Array.isArray(slotsDefault[0].children) && slotsDefault[0].children.length === 0)
 );
 
 const getTableHeight = () => {
-  console.log(pagination.value.clientHeight);
-  console.log(funBox.value.clientHeight);
-  const add = pagination.value.clientHeight + funBox.value.clientHeight + props.queryHeight;
-  console.log(add);
-  tableHeight.value = `calc(100vh - ${add + 50}px)`;
+  const funBoxHeight = isShowFunc.value ? funBox.value?.clientHeight + 12 : 0;
+  const paginationHeight = props.isPagination ? paginationBox.value.clientHeight + 12 : 0;
+
+  tableHeight.value = `calc(100vh - ${funBoxHeight + paginationHeight + props.queryHeight + 26}px)`;
+};
+// 分页功能
+const handleSizeChange = (pageSize) => {
+  emits("pagination-change", {
+    field: "pageSize",
+    value: pageSize,
+  });
+};
+const handleCurrentChange = (currentPage) => {
+  emits("pagination-change", {
+    field: "current",
+    value: currentPage,
+  });
 };
 
 const getColumns = () => {
@@ -153,7 +188,7 @@ const getColumns = () => {
         };
       });
   };
-  console.log(fn(props.columns));
+  // console.log(fn(props.columns));
   theColumns.value = fn(props.columns);
 
   if (typeof props.rowIndex === "object" || props.rowIndex) {
@@ -192,6 +227,13 @@ const getColumns = () => {
     });
   }
 };
+
+watch(
+  () => props.queryHeight,
+  (newVal) => {
+    getTableHeight();
+  }
+);
 
 onMounted(() => {
   getColumns();
