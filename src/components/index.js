@@ -1,14 +1,17 @@
 import EButton from "./EButton";
 import ECurd from "./ECurd";
+import EConfigProvider from "./EConfigProvider";
 
 const components = [
     EButton,
-    ECurd
+    ECurd,
+    EConfigProvider
 ];
 
 export {
     EButton,
-    ECurd
+    ECurd,
+    EConfigProvider
 };
 
 

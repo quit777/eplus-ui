@@ -25,6 +25,7 @@
         element-loading-background="rgba(255, 255, 255, 0.5)"
         scrollbar-always-on
         :height="tableHeight"
+        :show-overflow-tooltip="true"
       >
         <el-table-column
           v-for="({ title, key, width, children, align }, index) in theColumns"
@@ -179,7 +180,6 @@ const getColumns = () => {
           dataIndex: column.name,
           resizable: true, //支持拖拽
           width: column.width || width,
-          ellipsis: true,
           sorter: column.sorter || false,
           align: column.align || align,
           fixed: column.fixed,

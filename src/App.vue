@@ -45,6 +45,7 @@ const columns = ref([
   {
     label: "项目名称",
     name: "projectName",
+    width: 100,
     search: true,
     clearable: true,
     placeholder: "saiuusa",
