@@ -12,11 +12,19 @@
               :loading="loading"
               :isPagination="true"
               :pagination="pagination"
+              :row-action="{ width: 100 }"
+              :row-index="{ width: 50 }"
               @pagination-change="onPaginationChange"
               @search="onSearch"
             >
-              <template #default>
+              <template #function>
                 <el-button type="success">导出</el-button>
+              </template>
+              <template #operate="{ row }">
+                <el-space>
+                  <el-button type="primary" @click="onRemove(row)" link>查看</el-button>
+                  <el-button type="primary" @click="onRemove(row)" link>删除</el-button>
+                </el-space>
               </template>
             </ECurd>
           </EConfigProvider>
@@ -37,6 +45,10 @@ const query = ref({
   projectName: "测试",
 });
 
+const onRemove = (aa) => {
+  console.log(aa);
+};
+
 const { dataSource, loading, onSearch, pagination, onPaginationChange } = useTable({
   queryParams: query,
 });
@@ -55,6 +67,11 @@ const columns = ref([
   { label: "项目大类", name: "projectBigTypeName", search: true },
   { label: "项目子类", name: "projectChildTypeName", search: true },
   { label: "项目状态", name: "projectStatusName", search: true },
+  { label: "项目编码", name: "projectCode", width: 150 },
+  { label: "项目编码", name: "projectCode", width: 150 },
+  { label: "项目编码", name: "projectCode", width: 150 },
+  { label: "项目编码", name: "projectCode", width: 150 },
+  { label: "项目编码", name: "projectCode", width: 150 },
   // {
   //   label: "项目信息",
   //   align: "center",

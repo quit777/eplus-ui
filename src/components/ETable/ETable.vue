@@ -3,7 +3,7 @@
     <div v-if="isShowFunc" class="flex flex-row gap-12" ref="funBox">
       <div class="flex-auto">
         <!-- 占位内容 -->
-        <slot></slot>
+        <slot name="function"></slot>
       </div>
       <!-- <div v-if="showReload">
           <a-tooltip title="刷新">
@@ -21,31 +21,39 @@
         v-bind="$attrs"
         :data="dataSource"
         :border="true"
+        header-cell-class-name="table-header"
         v-loading="loading"
-        element-loading-background="rgba(255, 255, 255, 0.5)"
+        element-loading-background="rgba(255, 255, 255, 0.7)"
         scrollbar-always-on
         :height="tableHeight"
         :show-overflow-tooltip="true"
       >
-        <el-table-column
-          v-for="({ title, key, width, children, align }, index) in theColumns"
-          :key="key"
-          :prop="key"
-          :label="title"
-          :width="width"
-          :align="align"
-        >
-          <template v-if="children.length">
-            <el-table-column
-              v-for="({ title, key, width, align }, index) in children"
-              :key="key"
-              :prop="key"
-              :label="title"
-              :width="width"
-              :align="align"
-            />
-          </template>
-        </el-table-column>
+        <template v-for="(item, index) in theColumns" :key="item.key">
+          <!-- 序号 ||  -->
+          <el-table-column v-bind="filterChild(item)" v-if="item.key == 'rowIndex'">
+          </el-table-column>
+          <!-- 操作 -->
+
+          <el-table-column
+            v-bind="filterChild(item)"
+            v-else-if="item.key == 'rowAction'"
+            v-slot="scope"
+          >
+            <slot name="operate" :row="scope.row" />
+          </el-table-column>
+
+          <el-table-column v-else v-bind="filterChild(item)" :prop="item.key">
+            <template v-if="item?.children?.length">
+              <el-table-column
+                v-for="(childitem, index) in item?.children"
+                v-bind="childitem"
+                :prop="childitem.key"
+                :show-overflow-tooltip="true"
+              ></el-table-column>
+            </template>
+          </el-table-column>
+        </template>
+
         <template #headerCell="{ title, column }">
           <div :class="{ 'ant-table-header-required': column.required }">
             {{ title }}
@@ -90,10 +98,7 @@ import {
 } from "vue";
 const attrs = useAttrs();
 const slots = useSlots();
-// 有无功能区的插槽
-const slotsDefault = slots.default();
-// console.log(attrs, "attrs");
-console.log(slots, "slots");
+
 const paginationBox = ref(null);
 const funBox = ref(null);
 const tableHeight = ref(0);
@@ -133,12 +138,24 @@ const props = defineProps({
     type: Array,
     default: () => [10, 20, 30, 40, 50, 100],
   },
+  rowAction: {
+    type: [Object, Boolean],
+  },
+  rowIndex: {
+    type: [Object, Boolean],
+  },
 });
 let theColumns = ref([]);
 
-const isShowFunc = ref(
-  !(Array.isArray(slotsDefault[0].children) && slotsDefault[0].children.length === 0)
-);
+const filterChild = (item) => {
+  const copyI = {
+    ...item,
+  };
+  delete copyI.children;
+  return copyI;
+};
+
+const isShowFunc = ref(slots.hasOwnProperty("function"));
 
 const getTableHeight = () => {
   const funBoxHeight = isShowFunc.value ? funBox.value?.clientHeight + 12 : 0;
@@ -175,7 +192,7 @@ const getColumns = () => {
         let align = "left";
         let width = 200;
         return {
-          title: column.label,
+          label: column.label,
           key: column.name,
           dataIndex: column.name,
           resizable: true, //支持拖拽
@@ -192,25 +209,21 @@ const getColumns = () => {
   theColumns.value = fn(props.columns);
 
   if (typeof props.rowIndex === "object" || props.rowIndex) {
-    const { title = "序号", key = "rowIndex", width = 50, summary } = props.rowIndex;
+    const { label = "序号", key = "rowIndex", width = 50, summary } = props.rowIndex;
     theColumns.value.unshift({
-      title,
+      label,
       key,
       width,
       align: "center",
       fixed: "left",
-      customRender: ({ index, record }) => {
-        const { current = 1, pageSize = 10 } = pagination.value;
-        if (record.summary) {
-          return "合计";
-        }
+      formatter: (_row, _column, _cellValue, index) => {
+        const { current = 1, pageSize = 10 } = props.pagination;
         return (current - 1) * pageSize + index + 1;
       },
     });
   }
-
   if (typeof props.rowAction === "object" || props.rowAction) {
-    let { title = "操作", key = "rowAction", width = 200 } = props.rowAction;
+    let { label = "操作", key = "rowAction", width = 200 } = props.rowAction;
     let fixed = "right";
     let className = "";
     if (props.readonly) {
@@ -219,7 +232,7 @@ const getColumns = () => {
       fixed = null;
     }
     theColumns.value.push({
-      title,
+      label,
       key,
       width,
       fixed,

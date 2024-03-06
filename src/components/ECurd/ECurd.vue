@@ -16,11 +16,11 @@
     </div>
     <div class="flex-auto overflow-hidden">
       <ETable v-bind="$attrs" :columns="tableColumns" :queryHeight="queryHeight">
-        <template v-if="$slots.default" #default>
-          <slot />
+        <template v-if="$slots.function" #function>
+          <slot name="function" />
         </template>
-        <template #bodyCell="scope">
-          <slot v-bind="scope" name="bodyCell" />
+        <template #operate="scope">
+          <slot name="operate" :row="scope.row" />
         </template>
       </ETable>
     </div>
@@ -28,12 +28,14 @@
 </template>
 
 <script setup name="ECurd">
-import { defineProps, ref, useAttrs, onMounted } from "vue";
+import { defineProps, ref, useAttrs, onMounted, useSlots } from "vue";
 import EQuery from "../EQuery";
 import ETable from "../ETable";
 
 const aaa = useAttrs();
 // console.log(aaa, "attrs");
+const slot = useSlots();
+console.dir(slot, "curdSlot");
 // 查询区高度
 const queryHeight = ref(0);
 

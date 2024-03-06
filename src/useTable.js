@@ -25,7 +25,20 @@ export const useTable = (opts = {}) => {
       state.loading = false;
       state.dataSource = [
         {
-          projectName: "赛话术和爱妃估计啊你昂i我Angie昂i艾奥里给你",
+          projectName: "1赛话术和爱妃估计啊你昂i我Angie昂i艾奥里给你",
+          projectCode: "222",
+        },
+        {
+          projectName: "2赛话术和爱妃估计啊你昂i我Angie昂i艾奥里给你",
+          projectCode: "222",
+        },
+        {
+          projectName: "3赛话术和爱妃估计啊你昂i我Angie昂i艾奥里给你",
+          projectCode: "222",
+        },
+        {
+          projectName: "4赛话术和爱妃估计啊你昂i我Angie昂i艾奥里给你",
+          projectCode: "222",
         },
       ];
       state.pagination.total = 100;
